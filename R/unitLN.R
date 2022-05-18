@@ -2,15 +2,15 @@ unitLN <- function(yspos, Xs, Xpop,  areafacpop, areafacsamp, sampindex){
 
   ys <- log(yspos)
 
-  fitlog <- lmer(ys~Xs + (1|areafacsamp))
-  sig2bhat <- VarCorr(fitlog)[[1]][1,1]
+  fitlog <- lme4::lmer(ys~Xs + (1|areafacsamp))
+  sig2bhat <- lme4::VarCorr(fitlog)[[1]][1,1]
   sig2ehat <- summary(fitlog)$sigma^2
-  betahat <- fixef(fitlog)
+  betahat <- lme4::fixef(fitlog)
 
   nis <- tapply(areafacsamp, areafacsamp, length)
   Nis <- tapply(areafacpop, areafacpop, length)
-  Gs <- model.matrix(~ as.factor(areafacsamp) - 1)
-  GN <- model.matrix(~ as.factor(areafacpop)  -1)
+  Gs <- stats::model.matrix(~ as.factor(areafacsamp) - 1)
+  GN <- stats::model.matrix(~ as.factor(areafacpop)  -1)
 
   lbarsi <- tapply(ys, areafacsamp, mean)
   dbarsi <- t(Gs)%*%cbind(1, Xs)/as.vector(nis)
@@ -43,7 +43,7 @@ unitLN <- function(yspos, Xs, Xpop,  areafacpop, areafacsamp, sampindex){
   fi2 <- -gammais/(sig2bhat + sig2ehat/nis)/nis*(lbarsi - as.vector(dbarsi%*%betahat)) + 0.5*gammais^2/nis + 0.5
   yhatir <- t(GN[-sampindex,])%*%yhatijr
   mse.sig <- diag(cbind(fi1, fi2)%*%vcovsig%*%t(cbind(fi1, fi2)))/Nis^2*as.vector(yhatir)^2
-  mse.beta <- diag(air%*%vcov(fitlog)%*%t(air))/Nis^2
+  mse.beta <- diag(air%*%stats::vcov(fitlog)%*%t(air))/Nis^2
 
   MSEhatln <- kappai/Nis^2*(as.vector(sumnobs)^2*xi + as.vector(sumnobs2)*psi)
 
