@@ -12,3 +12,7 @@ RoxygenNote: 7.1.2
 Imports: 
     lme4,
     stats
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
