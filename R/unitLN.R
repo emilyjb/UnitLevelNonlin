@@ -1,3 +1,41 @@
+#' Small area inference for the unit-level lognormal model
+#'
+#' @param yspos a numeric vector with the positive (not log transformed) response variables
+#' @param Xs the matrix of covariates for sampled elements that does not contain an intercept
+#' @param Xpop the matrix of covariates for the full population that does not contain an intercept
+#' @param areafacpop a vector of area labels for the full population
+#' @param areafacsamp a vector of area samples for the full population
+#' @param sampindex the vector of sampled index values
+#'
+#' @return a list with predictions and MSE estimates
+#' @export
+#'
+#' @examples
+#' beta0 <- log(0.5)
+#' beta1 <- 1
+#' beta2 <- 2
+#' D <- 60
+#' Nis <- c(100, 200, 500)
+#' Nis <- rep(Nis, each = D/length(Nis))
+#' N <- sum(Nis)
+#' x1 <- rnorm(N)
+#' x2 <- rnorm(N)
+#' areafacpop <- rep(1:D, Nis)
+#' sigma2b <- 0.5
+#' sigma2e <- 1
+#' bi <- rnorm(D, mean = 0, sd = sqrt(sigma2b))
+#' ei <- rnorm(N, mean = 0, sd = sqrt(sigma2e))
+#' names(bi) <- as.character(1:D)
+#' y <- exp(beta0 + beta1*x1 + beta2*x2 + bi[as.character(areafacpop)] + ei)
+#' samplist <- sapply(1:D, function(i){sample( (1:N)[areafacpop == i],
+#' size = 0.1*Nis[i], replace = FALSE)})
+#' sampindex <- unlist(samplist)
+#' areafacsamp <- areafacpop[sampindex]
+#' ys <- y[sampindex]
+#' Xpop <- cbind(x1, x2)
+#' Xs <- Xpop[sampindex,]
+#' popindex <- 1:N
+#' unitLN(ys, Xs, Xpop,  areafacpop, areafacsamp, sampindex)
 unitLN <- function(yspos, Xs, Xpop,  areafacpop, areafacsamp, sampindex){
 
   ys <- log(yspos)
@@ -43,7 +81,8 @@ unitLN <- function(yspos, Xs, Xpop,  areafacpop, areafacsamp, sampindex){
   fi2 <- -gammais/(sig2bhat + sig2ehat/nis)/nis*(lbarsi - as.vector(dbarsi%*%betahat)) + 0.5*gammais^2/nis + 0.5
   yhatir <- t(GN[-sampindex,])%*%yhatijr
   mse.sig <- diag(cbind(fi1, fi2)%*%vcovsig%*%t(cbind(fi1, fi2)))/Nis^2*as.vector(yhatir)^2
-  mse.beta <- diag(air%*%stats::vcov(fitlog)%*%t(air))/Nis^2
+  M <- as.matrix(stats::vcov(fitlog))
+  mse.beta <- apply(air, 1, function(v){ t(v)%*%M%*%v })/Nis^2
 
   MSEhatln <- kappai/Nis^2*(as.vector(sumnobs)^2*xi + as.vector(sumnobs2)*psi)
 
