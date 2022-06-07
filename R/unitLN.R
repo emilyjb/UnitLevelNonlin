@@ -4,7 +4,7 @@
 #' @param Xs the matrix of covariates for sampled elements that does not contain an intercept
 #' @param Xpop the matrix of covariates for the full population that does not contain an intercept
 #' @param areafacpop a vector of area labels for the full population
-#' @param areafacsamp a vector of area samples for the full population
+#' @param areafacsamp a vector of area labels for the sample
 #' @param sampindex the vector of sampled index values
 #'
 #' @return a list with predictions and MSE estimates

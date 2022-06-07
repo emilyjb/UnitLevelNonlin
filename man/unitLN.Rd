@@ -15,7 +15,7 @@ unitLN(yspos, Xs, Xpop, areafacpop, areafacsamp, sampindex)
 
 \item{areafacpop}{a vector of area labels for the full population}
 
-\item{areafacsamp}{a vector of area samples for the full population}
+\item{areafacsamp}{a vector of area labels for the sample}
 
 \item{sampindex}{the vector of sampled index values}
 }
