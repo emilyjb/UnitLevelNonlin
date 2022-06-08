@@ -4,7 +4,7 @@ Version: 0.0.0.9000
 Authors@R: 
     person("Emily", "Berg", , "emilyb@iastate.edu", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: Currently, this package implements small area prediction for a unit-level lognormal model. In future work, we will incorporate Poisson models and gamma models. 
+Description: This package implements small area prediction for a unit-level lognormal model and a unit-level gamma-Poisson model. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
